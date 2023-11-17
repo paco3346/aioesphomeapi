@@ -158,6 +158,7 @@ from .model import (
     MediaPlayerCommand,
     MediaPlayerEntityState,
     MediaPlayerInfo,
+    MediaPlayerRepeatMode,
     NumberInfo,
     NumberState,
     SelectInfo,
@@ -1332,8 +1333,13 @@ class APIClient:
         key: int,
         *,
         command: MediaPlayerCommand | None = None,
-        volume: float | None = None,
+        seek_position: float | None = None,
+        volume_level: float | None = None,
         media_url: str | None = None,
+        source: str | None = None,
+        shuffle_set: bool | None = None,
+        sound_mode: bool | None = None,
+        repeat_mode: MediaPlayerRepeatMode | None = None,
     ) -> None:
         self._check_authenticated()
 
@@ -1342,12 +1348,27 @@ class APIClient:
         if command is not None:
             req.command = command
             req.has_command = True
-        if volume is not None:
-            req.volume = volume
-            req.has_volume = True
+        if seek_position is not None:
+            req.seek_position = seek_position
+            req.has_seek_position = True
+        if volume_level is not None:
+            req.volume_level = volume_level
+            req.has_volume_level = True
         if media_url is not None:
             req.media_url = media_url
             req.has_media_url = True
+        if source is not None:
+            req.source = source
+            req.has_source = True
+        if shuffle_set is not None:
+            req.shuffle_set = shuffle_set
+            req.has_shuffle_set = True
+        if sound_mode is not None:
+            req.sound_mode = sound_mode
+            req.has_sound_mode = True
+        if repeat_mode is not None:
+            req.repeat_mode = repeat_mode
+            req.has_repeat_mode = True
         assert self._connection is not None
         self._connection.send_message(req)
 

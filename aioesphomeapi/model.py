@@ -689,34 +689,80 @@ class LockEntityState(EntityState):
 
 # ==================== MEDIA PLAYER ====================
 class MediaPlayerState(APIIntEnum):
-    NONE = 0
-    IDLE = 1
-    PLAYING = 2
-    PAUSED = 3
+    OFF = 0
+    ON = 1
+    IDLE = 2
+    PLAYING = 3
+    PAUSED = 4
+    STANDBY = 5
+    BUFFERING = 6
 
 
 class MediaPlayerCommand(APIIntEnum):
-    PLAY = 0
-    PAUSE = 1
-    STOP = 2
+    PAUSE = 0
+    SEEK = 1
+    VOLUME_SET = 2
     MUTE = 3
     UNMUTE = 4
+    PREVIOUS_TRACK = 5
+    NEXT_TRACK = 6
+    TURN_ON = 7
+    TURN_OFF = 8
+    PLAY_MEDIA = 9
+    VOLUME_UP = 10
+    VOLUME_DOWN = 11
+    SELECT_SOURCE = 12
+    STOP = 13
+    CLEAR_PLAYLIST = 14
+    PLAY = 15
+    SHUFFLE_SET = 16
+    SELECT_SOUND_MODE = 17
+    REPEAT_SET = 18
+
+
+class MediaPlayerRepeatMode(APIIntEnum):
+    OFF = 0
+    ONE = 1
+    ALL = 2
 
 
 @_frozen_dataclass_decorator
 class MediaPlayerInfo(EntityInfo):
     supports_pause: bool = False
+    supports_seek: bool = False
+    supports_volume_set: bool = False
+    supports_volume_mute: bool = False
+    supports_previous_track: bool = False
+    supports_next_track: bool = False
+    supports_turn_on: bool = False
+    supports_turn_off: bool = False
+    supports_play_media: bool = False
+    supports_volume_step: bool = False
+    supports_select_source: bool = False
+    supports_stop: bool = False
+    supports_clear_playlist: bool = False
+    supports_play: bool = False
+    supports_shuffle_set: bool = False
+    supports_select_sound_mode: bool = False
+    supports_repeat_set: bool = False
 
 
 @_frozen_dataclass_decorator
 class MediaPlayerEntityState(EntityState):
     state: MediaPlayerState | None = converter_field(
-        default=MediaPlayerState.NONE, converter=MediaPlayerState.convert
+        default=MediaPlayerState.OFF, converter=MediaPlayerState.convert
     )
     volume: float = converter_field(
         default=0.0, converter=fix_float_single_double_conversion
     )
     muted: bool = False
+    source: str = ""
+    sound_mode: str = ""
+    repeat_mode: MediaPlayerRepeatMode | None = converter_field(
+        default=MediaPlayerRepeatMode.OFF, converter=MediaPlayerRepeatMode.convert
+    )
+    source_list: list[str] = converter_field(default_factory=list, converter=list)
+    sound_mode_list: list[str] = converter_field(default_factory=list, converter=list)
 
 
 # ==================== ALARM CONTROL PANEL ====================
